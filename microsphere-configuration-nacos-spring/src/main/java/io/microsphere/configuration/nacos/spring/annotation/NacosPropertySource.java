@@ -1,5 +1,6 @@
 package io.microsphere.configuration.nacos.spring.annotation;
 
+import io.microsphere.nacos.client.common.namespace.model.Namespace;
 import io.microsphere.spring.config.context.annotation.PropertySourceExtension;
 import io.microsphere.spring.config.env.support.DefaultResourceComparator;
 import org.springframework.context.annotation.Import;
@@ -141,11 +142,19 @@ public @interface NacosPropertySource {
     @AliasFor(annotation = PropertySourceExtension.class)
     Class<? extends PropertySourceFactory> factory() default DefaultPropertySourceFactory.class;
 
+    /**
+     * {@link Namespace#getNamespaceId() the id of namespace}, a.k.a the "tenant".
+     * if not specified, the {@link DEFAULT_NAMESPACE_ID "public" namespace} will be used.
+     */
     String nameSpaceId() default DEFAULT_NAMESPACE_ID;
 
+    /**
+     * the group of Config. if not specified, the "DEFAULT_GROUP" will be used.
+     */
     String group() default DEFAULT_GROUP_NAME;
 
+    /**
+     * the data id of Config
+     */
     String dataId() default "DEFAULT_DATA_ID";
-
-    String[] tag() default {"D_TAG1", "D_TAG2", "D_TAG3"};
 }
