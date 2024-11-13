@@ -6,6 +6,7 @@ import io.microsphere.nacos.client.common.config.ConfigType;
 import io.microsphere.nacos.client.common.config.model.NewConfig;
 import io.microsphere.nacos.client.transport.OpenApiHttpClient;
 import io.microsphere.nacos.client.v1.config.OpenApiConfigClient;
+import io.microsphere.nacos.client.v1.config.util.ConfigUtil;
 import io.microsphere.spring.config.env.support.JsonPropertySourceFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -81,7 +82,8 @@ public class NacosPropertySourceTest {
 
         System.setProperty("microsphere.nacos.client.serverAddress", serverAddress);
 
-        client = OpenApiConfigClientHolder.getNacosClientMap().computeIfAbsent("defaultNacosPropertySource", e -> {
+        String configId = ConfigUtil.buildConfigId(DEFAULT_NAMESPACE_ID, DEFAULT_GROUP_NAME, TEST_DATA_ID);
+        client = OpenApiConfigClientHolder.getNacosClientMap().computeIfAbsent(configId, e -> {
             NacosClientConfig config = new NacosClientConfig();
             config.setLongPollingTimeout(5000);
             config.setServerAddress(serverAddress);

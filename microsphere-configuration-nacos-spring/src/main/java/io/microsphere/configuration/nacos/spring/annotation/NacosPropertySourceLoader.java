@@ -6,6 +6,7 @@ import io.microsphere.nacos.client.common.config.event.ConfigChangedEvent;
 import io.microsphere.nacos.client.common.config.model.Config;
 import io.microsphere.nacos.client.transport.OpenApiHttpClient;
 import io.microsphere.nacos.client.v1.config.OpenApiConfigClient;
+import io.microsphere.nacos.client.v1.config.util.ConfigUtil;
 import io.microsphere.spring.boot.context.properties.bind.util.BindUtils;
 import io.microsphere.spring.config.context.annotation.PropertySourceExtensionLoader;
 import io.microsphere.util.ArrayUtils;
@@ -47,7 +48,11 @@ public class NacosPropertySourceLoader extends PropertySourceExtensionLoader<Nac
     }
 
     private OpenApiConfigClient getClient(NacosPropertySourceAttributes extensionAttributes) {
-        return OpenApiConfigClientHolder.getNacosClientMap().computeIfAbsent(extensionAttributes.getName(), (n) -> {
+        String nameSpaceId = extensionAttributes.getNameSpaceId();
+        String group = extensionAttributes.getGroup();
+        String dataId = extensionAttributes.getDataId();
+        String configId = ConfigUtil.buildConfigId(nameSpaceId, group, dataId);
+        return OpenApiConfigClientHolder.getNacosClientMap().computeIfAbsent(configId, (n) -> {
             NacosClientConfig nacosClientConfig = getNacosClientConfig();
             OpenApiHttpClient openApiHttpClient = new OpenApiHttpClient(nacosClientConfig);
             Assert.notNull(openApiHttpClient, "OpenApiHttpClient must not be null");
